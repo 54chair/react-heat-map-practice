@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Tooltip from '@uiw/react-tooltip';
 import HeatMap from '@uiw/react-heat-map';
 
 const value = [
-  { date: '2016/01/11', count:2 },
-  ...[...Array(17)].map((_, idx) => ({ date: `2016/01/${idx + 10}`, count: idx })),
-  ...[...Array(17)].map((_, idx) => ({ date: `2016/02/${idx + 10}`, count: idx })),
+  { date: '2016/01/11', count:15 },
   { date: '2016/04/12', count:2 },
   { date: '2016/05/01', count:5 },
   { date: '2016/05/02', count:5 },
@@ -14,24 +13,20 @@ const value = [
 ];
 
 const Demo = () => {
-  const [size, setSize] = useState(0)
   return (
-    <div>
-      <label style={{ userSelect: 'none' }}>
-        <input
-          type="checkbox"
-          checked={size === 0}
-          onChange={(e) => setSize(e.target.checked ? 0 : 12)}
-        />
-        {size === 0 ? ' Hide' : ' Show'} Legend
-      </label>
-      <HeatMap
-        width={600}
-        value={value}
-        legendCellSize={size}
-        startDate={new Date('2016/01/01')}
-      />
-    </div>
+    <HeatMap
+      value={value}
+      width={600}
+      startDate={new Date('2016/01/01')}
+      rectRender={(props, data) => {
+        // if (!data.count) return <rect {...props} />;
+        return (
+          <Tooltip placement="top" content={`count: ${data.count || 0}`}>
+            <rect {...props} />
+          </Tooltip>
+        );
+      }}
+    />
   )
 };
 export default Demo
